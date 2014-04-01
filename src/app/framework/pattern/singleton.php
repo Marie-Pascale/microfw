@@ -2,7 +2,7 @@
 /**
  * Singleton pattern class
  *
- * @author     Marie-Pascale Girard <marie-pascale.girard@tonikgroupimage.com>
+ * @author     Marie-Pascale Girard <marie.p.girard@gmail.com>
  * @package    framework
  * @filesource
  */
