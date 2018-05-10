@@ -1,0 +1,18 @@
+<?php
+	include_once(__DIR__.'/header.php');
+?>
+
+<div class="main">
+
+	<table>
+		<tr><th>id</th><th>first name</th><th>last name</th><th>phone</th><th>email</th></tr>
+<?php foreach ($this->liste as $record): ?>
+		<tr><td><?php echo $record['id'] ?></td><td><?php echo $record['firstname'] ?></td><td><?php echo $record['lastname'] ?></td><td><?php echo $record['phone'] ?></td><td><?php echo $record['email'] ?></td></tr>
+<?php endforeach; ?>
+	</table>
+</div>
+
+<?
+    // HTML page footer
+    include_once(__DIR__.'/footer.php');
+?>
