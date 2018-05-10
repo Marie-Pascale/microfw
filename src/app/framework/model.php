@@ -97,6 +97,10 @@ class model
 	public function liste($options=array()) {
 		$qry = $this->select($options);
 
+		if (isset($options['dbg-display-query']) && $options['dbg-display-query']) {
+			var_dump($qry);
+		}
+
 		// Query is built, now we execute and return the result.
 		$res = $this->query($qry);
 
@@ -224,6 +228,10 @@ class model
 			} else {
 				$qry .= $options['fields'];
 			}
+		} elseif(isset($this->_default_select_fields) && is_array($this->_default_select_fields)) {
+			$qry .= implode(",",$this->_default_select_fields);
+		} elseif(isset($this->_default_select_fields)) {
+			$qry .= $this->_default_select_fields;
 		} else {
 			$qry .= "*";
 		}
@@ -238,13 +246,16 @@ class model
 				foreach ($options['filters'] as $field=>$val) {
 					if (is_numeric($field)) {
 						$qry .= (!$first?" AND ":" ").$val;
+					} elseif(is_array($val)) {
+						$vals = array_map($db->quote,$val);
+						$qry .= (!$first?" AND ":" ")."`".$field."`"." IN (".implode(",", $vals).")";
 					} else {
 						$qry .= (!$first?" AND ":" ")."`".$field."`"." LIKE ".$db->quote($val);
 					}
 					$first = false;
 				}
 			} else {
-				$qry .= $options['filters'];
+				$qry .= " ".$options['filters'];
 			}
 		}
 		if (is_array($options['filters_ne']) && count($options['filters_ne'])) {
@@ -287,7 +298,7 @@ class model
 					$first = false;
 				}
 			} else {
-				$qry .= " `".$options['sort']."` asc";
+				$qry .= " ".$options['sort'];
 			}
 		}
 		if (isset($options['page'])) {

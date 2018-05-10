@@ -49,6 +49,10 @@ class router
 	public function dispatch($url, $method="") {
 		// interate through the routes until we find one that matches
 		$route = false;
+		$di = \framework\injector::getInstance();
+		$cfg = $di->getRessource("config");
+		$showDebug = ($cfg->getEnv()=="dev");
+
 		foreach ($this->_routes as $pattern=>$description) {
 			// Extract all the parameters in the pattern and see if the url matches the route
 			$params = array();
@@ -83,7 +87,6 @@ class router
 				// validate if the controller & action exist and then execute it
 				if (method_exists($controller,$action)) {
 					$ctrl = new $controller($this);
-					$di = \framework\injector::getInstance();
 					$di->register("controller",$ctrl);
 					$ctrl->$action($parameters);
 					return;
@@ -97,7 +100,10 @@ class router
 		}
 		else {
 			header( $_ENV['SERVER_PROTOCOL']." 404 Not Found", true, 404 );
+			header( "content-type: text/plain" );
 			print "404 Not Found";
+			$showDebug and print " - Route not found or invalid for $url\n\nRoutes:\n";
+			var_export($this->_routes);
 			return;
 		}
 	}

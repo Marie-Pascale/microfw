@@ -80,4 +80,8 @@ class config
 		// No cache content was found, return default value (null)
 		return $default;
 	}
+
+	public function getEnv() {
+		return $this->_env;
+	}
 }

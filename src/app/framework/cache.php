@@ -34,8 +34,9 @@ class cache
 	 *
 	 * @return void
 	 */
-	public function __construct($basepath="app/cache/") {
+	public function __construct($basepath="app/cache/", $defaultLifetime=3600) {
 		$this->_basepath = $basepath;
+		$this->_lifetime = $defaultLifetime;
 		if (method_exists($this, "initialize")) {
 			$this->initialize();
 		}
@@ -56,6 +57,9 @@ class cache
 		if (file_exists($cache_file)) {
 			$cacheContentCall = function () use ($cache_file) {return include $cache_file;};
 			$cacheContent = $cacheContentCall();
+			if ((isset($options['lifetime'])?$options['lifetime']:$this->_lifetime) == "eternal") {
+				return $cacheContent['content'];
+			}
 			$invalidatedTime = time()-(isset($options['lifetime'])?$options['lifetime']:$this->_lifetime);
 
 			// If the cache's content is too old, invalidate it

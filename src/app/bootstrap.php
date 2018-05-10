@@ -37,6 +37,10 @@ $i18n = new \framework\translations(array("debug"=>true,"accepted-languages"=>$c
 $i18n->setup("cookie");
 $di->register("i18n", $i18n);
 
+// cache initialisation
+$cache = new \framework\cache(__DIR__.DIRECTORY_SEPARATOR."cache","eternal"); // cache n'expire jamais
+$di->register("cache", $cache);
+
 // Instanciate a router and add all the routes found in the config file
 $router = new \framework\router();
 $di->register("router", $router);
